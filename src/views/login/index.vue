@@ -10,7 +10,7 @@ const loginForm = ref({
   password: '123456789'
 })
 const login = () => {
-  router.push('/')
+  router.push('/admin')
 }
 const forgot = () => {
   console.log('forgot')

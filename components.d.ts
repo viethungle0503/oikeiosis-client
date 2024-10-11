@@ -9,6 +9,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     AnimalFacts: typeof import('./src/components/Practice/AnimalFacts.vue')['default']
     Avatar: typeof import('primevue/avatar')['default']
+    Breadcrumb: typeof import('primevue/breadcrumb')['default']
     Button: typeof import('primevue/button')['default']
     CatFacts: typeof import('./src/components/Practice/CatFacts.vue')['default']
     Column: typeof import('primevue/column')['default']
@@ -17,6 +18,7 @@ declare module 'vue' {
     CreatePage: typeof import('./src/components/Practice/CreatePage.vue')['default']
     DataTable: typeof import('primevue/datatable')['default']
     DatePicker: typeof import('primevue/datepicker')['default']
+    Dock: typeof import('primevue/dock')['default']
     FloatLabel: typeof import('primevue/floatlabel')['default']
     HelloWorld: typeof import('./src/components/Vue/HelloWorld.vue')['default']
     IconCommunity: typeof import('./src/components/icons/IconCommunity.vue')['default']
@@ -28,6 +30,7 @@ declare module 'vue' {
     InputGroupAddon: typeof import('primevue/inputgroupaddon')['default']
     InputNumber: typeof import('primevue/inputnumber')['default']
     InputText: typeof import('primevue/inputtext')['default']
+    Menubar: typeof import('primevue/menubar')['default']
     NavbarContainer: typeof import('./src/components/Practice/NavbarContainer.vue')['default']
     NavbarLink: typeof import('./src/components/Practice/NavbarLink.vue')['default']
     PageEdit: typeof import('./src/components/Practice/PageEdit.vue')['default']
@@ -36,12 +39,17 @@ declare module 'vue' {
     PageViewer: typeof import('./src/components/Practice/PageViewer.vue')['default']
     Password: typeof import('primevue/password')['default']
     PriceCondition: typeof import('./src/components/securities/PriceCondition.vue')['default']
+    RadioButton: typeof import('primevue/radiobutton')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Select: typeof import('primevue/select')['default']
+    Sidebar: typeof import('primevue/sidebar')['default']
     TheWelcome: typeof import('./src/components/Vue/TheWelcome.vue')['default']
     Toast: typeof import('primevue/toast')['default']
     VolumeCondition: typeof import('./src/components/securities/VolumeCondition.vue')['default']
     WelcomeItem: typeof import('./src/components/Vue/WelcomeItem.vue')['default']
+  }
+  export interface ComponentCustomProperties {
+    Tooltip: typeof import('primevue/tooltip')['default']
   }
 }

@@ -17,6 +17,11 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
+      path: '/',
+      name: 'root',
+      redirect: { name: 'login' }
+    },
+    {
       path: '/login',
       name: 'login',
       component: () => import('@/views/login/index.vue')
@@ -27,7 +32,12 @@ const router = createRouter({
 
     },
     {
-      path: '/',
+      path: '/admin',
+      component: () => import('@/views/admin/index.vue'),
+
+    },
+    {
+      path: '/home',
       name: 'home',
       component: HomeView
     },
