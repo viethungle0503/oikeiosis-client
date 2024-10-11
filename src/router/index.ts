@@ -17,6 +17,16 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
+      path: '/login',
+      name: 'login',
+      component: () => import('@/views/login/index.vue')
+    },
+    {
+      path: '/404',
+      component: () => import('@/views/errors/404.vue')
+
+    },
+    {
       path: '/',
       name: 'home',
       component: HomeView
@@ -79,7 +89,9 @@ const router = createRouter({
       path: '/axios-example',
       name: 'axios-example',
       component: () => import('@/views/Practice/AxiosExampleView.vue')
-    }
+    },
+    // 404 page must be placed at the end !!!
+    { path: '/:pathMatch(.*)*', redirect: '/404'} // uses a route parameter pathMatch with a custom regular expression (.*)* to match any path.
   ]
 })
 
