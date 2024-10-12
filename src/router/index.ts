@@ -33,7 +33,8 @@ const router = createRouter({
     },
     {
       path: '/admin',
-      component: () => import('@/views/admin/index.vue')
+      component: () => import('@/views/admin/index.vue'),
+      meta: { requiresAuth: true }
     },
     {
       path: '/home',
@@ -105,20 +106,23 @@ const router = createRouter({
 })
 
 // Global Navigation Guard for Authentication Checks
-router.beforeEach((to, from) => {
+router.beforeEach((to, from, next) => {
   const authStore = useAuthStore()
   const names = ['vue', 'vue-home', 'vue-about']
-  const protectedRoutes = ['admin']
   if (names.includes(to.name as string)) {
     console.log('Hello from initial view of Vue')
   }
 
   // Redirect the user to the login page if the user is not authenticated
   // And not already attempting to visit the login or register pages
-  if (!authStore.userData && protectedRoutes.includes(to.name as string)) {
-    return {
-      name: 'login'
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    if (authStore.userData == null) {
+      next({ name: 'login' })
+    } else {
+      next()
     }
+  } else {
+    next()
   }
 })
 

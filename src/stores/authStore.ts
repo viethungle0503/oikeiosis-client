@@ -3,7 +3,9 @@ import { ref } from 'vue'
 
 export const useAuthStore = defineStore('authStore', () => {
   // A variable ref to store the user data
-  const userData = ref<{ name: string; email: string; isAdmin: boolean } | null>(null)
+  const userData = ref<{ name: string; email: string; isAdmin: boolean } | null>(
+    localStorage.getItem('userData') ? JSON.parse(localStorage.getItem('userData') as string) : null
+  )
 
   // A function acts as a setter to set the incoming user data
   const setUserData = (newUserData: any) => {
