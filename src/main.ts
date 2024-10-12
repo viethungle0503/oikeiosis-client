@@ -10,6 +10,7 @@ import axios from './plugins/axios'
 import mitt from 'mitt' // Import mitt
 const emitter = mitt() // Initialize mitt
 import pages from './utils/data' // Import data.ts
+import '@/mocks/axios' // Import axios mock
 
 const app = createApp(App)
 

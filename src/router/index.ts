@@ -9,6 +9,7 @@ import CreatePage from '@/components/Practice/CreatePage.vue'
 import PagesManagement from '@/components/Practice/PagesManagement.vue'
 import PagesList from '@/components/Practice/PagesList.vue'
 import PageEdit from '@/components/Practice/PageEdit.vue'
+import { useAuthStore } from '@/stores/authStore'
 
 // route level code-splitting
 // this generates a separate chunk (About.[hash].js) for this route
@@ -29,12 +30,10 @@ const router = createRouter({
     {
       path: '/404',
       component: () => import('@/views/errors/404.vue')
-
     },
     {
       path: '/admin',
-      component: () => import('@/views/admin/index.vue'),
-
+      component: () => import('@/views/admin/index.vue')
     },
     {
       path: '/home',
@@ -101,16 +100,26 @@ const router = createRouter({
       component: () => import('@/views/Practice/AxiosExampleView.vue')
     },
     // 404 page must be placed at the end !!!
-    { path: '/:pathMatch(.*)*', redirect: '/404'} // uses a route parameter pathMatch with a custom regular expression (.*)* to match any path.
+    { path: '/:pathMatch(.*)*', redirect: '/404' } // uses a route parameter pathMatch with a custom regular expression (.*)* to match any path.
   ]
 })
 
-router.beforeEach((to, from, next) => {
+// Global Navigation Guard for Authentication Checks
+router.beforeEach((to, from) => {
+  const authStore = useAuthStore()
   const names = ['vue', 'vue-home', 'vue-about']
+  const protectedRoutes = ['admin']
   if (names.includes(to.name as string)) {
     console.log('Hello from initial view of Vue')
   }
-  next()
+
+  // Redirect the user to the login page if the user is not authenticated
+  // And not already attempting to visit the login or register pages
+  if (!authStore.userData && protectedRoutes.includes(to.name as string)) {
+    return {
+      name: 'login'
+    }
+  }
 })
 
 export default router
