@@ -1,8 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import 'bootstrap/dist/css/bootstrap.min.css'
-import 'bootstrap'
-import '@/assets/styles.scss'
 import ConditionGenerator from '@/components/securities/ConditionGenerator.vue'
 
 const toggleDarkMode = () => {
