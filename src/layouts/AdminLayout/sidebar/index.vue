@@ -5,7 +5,7 @@ import { ref } from 'vue'
 <template>
   <div
     id="bdSidebar"
-    class="d-flex flex-column flex-shrink-0 p-3 bg-success text-white offcanvas-md offcanvas-start"
+    class="d-flex flex-column flex-shrink-0 p-3"
   >
     <a href="#" class="navbar-brand"> </a>
     <hr />
@@ -86,17 +86,21 @@ import { ref } from 'vue'
 </template>
 
 <style scoped>
+#bdSidebar {
+  background-color: #E9DBF5;
+  color: black;
+}
 .gfg {
   height: 50px;
   width: 50px;
 }
 
 .mynav {
-  color: #fff;
+  color: black;
 }
 
 .mynav li a {
-  color: #fff;
+  color: black;
   text-decoration: none;
   width: 100%;
   display: block;

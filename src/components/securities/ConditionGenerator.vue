@@ -135,7 +135,7 @@ const submit = async () => {
         showButtonBar
         class="col-md-4"
         id="range"
-      />
+      ></DatePicker>
     </div>
     <Button label="Add Condition" icon="pi pi-plus" @click="addCondition()"></Button>
     <div v-for="(condition, index) in conditions" :key="index" class="mt-2">

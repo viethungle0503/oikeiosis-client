@@ -33,8 +33,16 @@ const router = createRouter({
     },
     {
       path: '/admin',
+      name: 'admin',
       component: () => import('@/views/admin/index.vue'),
-      meta: { requiresAuth: true }
+      meta: { requiresAuth: true },
+      children:[
+        {
+          path:'investor-classification',
+          name:'investor-classification',
+          component: () => import('@/components/securities/InvestorClassification.vue')
+        }
+      ]
     },
     {
       path: '/home',
