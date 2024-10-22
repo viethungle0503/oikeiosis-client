@@ -1,8 +1,15 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import axios from 'axios';
+import { useToast } from 'primevue/usetoast'
 
+const toast = useToast();
+const label = ref('');
 const code = ref('MWG');
+const uppercaseCode = computed({
+  get: () => code.value.toUpperCase(),
+  set: (value) => (code.value = value)
+});
 const frequently = ref('Daily');
 const page = ref(1);
 const pageSize = ref(60);
@@ -51,10 +58,12 @@ const onToggle = (val: any) => {
 
 const getInvestorClassification = async () => {
   try {
+    toast.add({ severity: 'info', summary: 'Đang lấy dữ liệu', detail: `Mã ${uppercaseCode.value}`, life: 3000 })
+    label.value = uppercaseCode.value;
     const baseUrl = `${import.meta.env.VITE_SERVER_OIKEIOSIS_URL}/api/v1/fiin-trade/investor-classification`;
     from.value = formatDate(dates.value[0]);
     to.value = formatDate(dates.value[1]);
-    const params = `?language=vi&code=${code.value}&frequently=${frequently.value}&page=${page.value}&pageSize=${pageSize.value}&from=${from.value}&to=${to.value}`;
+    const params = `?language=vi&code=${uppercaseCode.value}&frequently=${frequently.value}&page=${page.value}&pageSize=${pageSize.value}&from=${from.value}&to=${to.value}`;
     const url = `${baseUrl}${params}`;
     const response = await axios.get(url, {
       headers: {
@@ -93,6 +102,7 @@ const getInvestorClassification = async () => {
         return item;
       });
       transactionData.value = result;
+      toast.add({ severity: 'success', summary: 'Lấy dữ liệu thành công', detail: `Cho mã ${uppercaseCode.value}`, life: 3000 })
     }
   } catch (error) {
     console.error(error);
@@ -123,8 +133,10 @@ const getColumnClass = (field: string, data: any) => {
 
 <template>
   <div class="card">
+    <Toast />
     <div class="d-flex flex-row justify-content-center mb-2 mt-2" style="gap: 5rem">
-      <InputText type="text" v-model="code" variant="filled"></InputText>
+      <h1 class="display-4 text-danger">{{ label }}</h1>
+      <InputText type="text" v-model="uppercaseCode" variant="filled" class="text-uppercase"></InputText>
       <DatePicker
         v-model="dates"
         :invalid="dates === null"
