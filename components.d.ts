@@ -8,6 +8,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AnimalFacts: typeof import('./src/components/Practice/AnimalFacts.vue')['default']
+    AutoComplete: typeof import('primevue/autocomplete')['default']
     Avatar: typeof import('primevue/avatar')['default']
     BButton: typeof import('bootstrap-vue-next/components/BButton')['BButton']
     BCollapse: typeof import('bootstrap-vue-next/components/BCollapse')['BCollapse']

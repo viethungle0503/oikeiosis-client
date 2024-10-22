@@ -1,15 +1,39 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import axios from 'axios';
 import { useToast } from 'primevue/usetoast';
 
 const toast = useToast();
 const label = ref('');
-const code = ref('MWG');
-const uppercaseCode = computed({
-  get: () => code.value.toUpperCase(),
-  set: (value) => (code.value = value)
-});
+const code = ref<{
+  label: string;
+  value: string;
+  organName: string;
+  organShortName: string;
+}>(
+  {
+    label: 'MWG',
+    value: 'MWG',
+    organName: '',
+    organShortName: ''
+  }
+);
+const filteredCodes = ref();
+const organizationList = ref<any[]>([]);
+const searchItems = (event: any) => {
+  let query = event.query;
+  let _filteredItems = [];
+
+  for (let i = 0; i < organizationList.value.length; i++) {
+    let item = organizationList.value[i];
+
+    if (item.label.toLowerCase().indexOf(query.toLowerCase()) === 0) {
+      _filteredItems.push(item);
+    }
+  }
+
+  filteredCodes.value = _filteredItems;
+};
 const frequently = ref('Daily');
 const page = ref(1);
 const pageSize = ref(60);
@@ -73,14 +97,14 @@ const getInvestorClassification = async () => {
     toast.add({
       severity: 'info',
       summary: 'Đang lấy dữ liệu',
-      detail: `Mã ${uppercaseCode.value}`,
+      detail: `Mã ${code.value.label}`,
       life: 3000
     });
-    label.value = uppercaseCode.value;
+    label.value = code.value.label;
     const baseUrl = `${import.meta.env.VITE_SERVER_OIKEIOSIS_URL}/api/v1/fiin-trade/investor-classification`;
     from.value = formatDate(dates.value[0]);
     to.value = formatDate(dates.value[1]);
-    const params = `?language=vi&code=${uppercaseCode.value}&frequently=${frequently.value}&page=${page.value}&pageSize=${pageSize.value}&from=${from.value}&to=${to.value}`;
+    const params = `?language=vi&code=${code.value.value}&frequently=${frequently.value}&page=${page.value}&pageSize=${pageSize.value}&from=${from.value}&to=${to.value}`;
     const url = `${baseUrl}${params}`;
     const response = await axios.get(url, {
       headers: {
@@ -145,8 +169,33 @@ const getInvestorClassification = async () => {
       toast.add({
         severity: 'success',
         summary: 'Lấy dữ liệu thành công',
-        detail: `Mã ${uppercaseCode.value}`,
+        detail: `Mã ${code.value.label}`,
         life: 3000
+      });
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const getOrganizationList = async () => {
+  try {
+    const response = await axios.get(
+      `${import.meta.env.VITE_SERVER_OIKEIOSIS_URL}/api/v1/fiin-trade/organization-list`,
+      {
+        headers: {
+          'ngrok-skip-browser-warning': 'true'
+        }
+      }
+    );
+    if (response.data) {
+      organizationList.value = response.data.items.map((item: any) => {
+        return {
+          label: item.ticker,
+          value: item.organCode,
+          organName: item.organName,
+          organShortName: item.organShortName
+        };
       });
     }
   } catch (error) {
@@ -174,18 +223,41 @@ const getColumnClass = (field: string, data: any) => {
     return 'text-danger';
   } else return 'text-success';
 };
+
+onMounted(() => {
+  getOrganizationList();
+});
 </script>
 
 <template>
   <div class="card" style="max-width: 100%">
     <Toast />
     <div class="d-flex flex-row justify-content-center mb-2 mt-2" style="gap: 5rem">
-      <InputText
-        type="text"
-        v-model="uppercaseCode"
-        variant="filled"
+      <AutoComplete
+        v-model="code"
+        :suggestions="filteredCodes"
+        @complete="searchItems"
+        :virtualScrollerOptions="{ itemSize: 40 }"
+        :forceSelection="true"
+        optionLabel="label"
+        :dropdown="true"
         class="text-uppercase"
-      ></InputText>
+        :pt="{
+          option: 'flex flex-row items-center h-25'
+        }"
+      >
+        <template #option="slotProps">
+          <div class="flex items-center">
+            <p
+              :class="`flag flag-${slotProps.option.value.toLowerCase()} mr-2`"
+              style="min-width: 50px; word-break: break-all; white-space: normal"
+            >
+              {{ slotProps.option.label }}
+              <span> - {{ slotProps.option.organShortName }}</span>
+            </p>
+          </div>
+        </template>
+      </AutoComplete>
       <DatePicker
         v-model="dates"
         :invalid="dates === null"
@@ -302,5 +374,4 @@ const getColumnClass = (field: string, data: any) => {
   </div>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>
