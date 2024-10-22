@@ -1,21 +1,48 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { useToast } from 'primevue/usetoast'
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { useToast } from 'primevue/usetoast';
+import axios from 'axios';
+import { useAuthStore } from '@/stores/authStore';
 
-const toast = useToast()
-const router = useRouter()
+const authStore = useAuthStore();
+const toast = useToast();
+const router = useRouter();
 const loginForm = ref({
   username: 'admin',
   password: '123456789'
-})
-const login = () => {
-  router.push('/admin')
-}
+});
+const login = async () => {
+  try {
+    const response = await axios.get('http://127.0.0.1:8000/api/secured');
+    if (response.status === 200 && response.data) {
+      authStore.setUserData({
+        name: response.data.name,
+        email: response.data.email,
+        isAdmin: response.data.isAdmin
+      });
+      localStorage.setItem('userData', JSON.stringify(authStore.userData));
+      router.push('/admin');
+      return;
+    }
+    toast.add({
+      severity: 'error',
+      summary: 'Đăng nhập thất bại',
+      detail: 'Sai tên đăng nhập hoặc mật khẩu',
+      life: 3000
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
 const forgot = () => {
-  console.log('forgot')
-  toast.add({ severity: 'error', summary: 'Chức năng chưa được phát triển', detail: 'Thiếu thời gian và công sức', life: 3000 })
-}
+  toast.add({
+    severity: 'error',
+    summary: 'Chức năng chưa được phát triển',
+    detail: 'Thiếu thời gian và công sức',
+    life: 3000
+  });
+};
 </script>
 
 <template>

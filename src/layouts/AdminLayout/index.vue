@@ -64,9 +64,11 @@ const items = ref([{ label: 'Investor Classification', route: '/admin/investor-c
   top: 0;
   left: 0;
   height: 100vh;
+  max-width: 14vw;
 }
 
 .admin-content {
   background-color: rgb(153, 121, 193);
+ max-width: 86vw;
 }
 </style>
